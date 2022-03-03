@@ -1,6 +1,8 @@
-## Smart Glove for Sign Langauge Recognition
+## Project Title
+Smart Glove for Sign Langauge Recognition
  
-## Beining (Cathy) Zhou, Zhiyin Lin
+## Team Members
+Beining (Cathy) Zhou, Zhiyin Lin
  
 ## Project description
 We will build a smart glove that detects the user’s hand gestures. As the client uses American Sign Language, our glove will recognize the 26 letters they gesture.
