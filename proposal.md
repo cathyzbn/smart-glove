@@ -14,25 +14,40 @@ If time permits, we would like to integrate this glove into a console. As client
 
 ## Hardware, budget
 Budget: $54.75 + $15.95  = $70.7 
+
    5x Flex Sensors, $10.95 * 5 link: https://www.sparkfun.com/products/10264 
+
    1x Accelerometer, link: https://www.pololu.com/product/2736 
+
    1x A to D converter, acquired from Pat
+
+
    Numerous resistors, Pi, breadboard, acquired 
  
 
 ## Major tasks, member responsibilities
 Accelerometer module
+
 Flex sensor module
+
 Circuit (datasheet: https://cdn.sparkfun.com/assets/9/5/b/f/7/FLEX_SENSOR_-_SPECIAL_EDITION_DATA_SHEET_v2019__Rev_A_.pdf)
+
 ASL 26 Letter Detection using if-else statements
+
 Design the glove
+
 (Optional) output: graphics
+
 (Optional) additional original letters such as a space, a heart, a thumb-up, and more
+
  
 ## Schedule, midpoint milestones
 By next Week 10 Wed Lab, we hope to be able to read input from the accelerometer and the flex sensor modulo that we can work with. 
+
 Accelerometer module
+
 Flex sensor module
+
 (Potentially) the circuit 
  
 ## Resources needed, issues
