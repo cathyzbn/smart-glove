@@ -2,7 +2,7 @@
 # TODO: edit APPLICATION to name of project application from src/apps
 # TODO: edit TEST to name of unit test program from src/tests
 
-MY_MODULES = project-module.o
+MY_MODULES = project-module.o flex.o mcp3008.o
 
 # Targets for this makefile
 APPLICATION = build/project-app.bin
@@ -19,10 +19,10 @@ export warn = -Wall -Wpointer-arith -Wwrite-strings -Werror \
         -fno-diagnostics-show-option
 export freestanding = -ffreestanding -nostdinc \
 		-isystem $(shell arm-none-eabi-gcc -print-file-name=include)
-CFLAGS	= -I$(CS107E)/include -Og -g -std=c99 $$warn $$freestanding
+CFLAGS	= -I$(CS107E)/include -Isrc/include -Og -g -std=c99 $$warn $$freestanding
 CFLAGS += -mapcs-frame -fno-omit-frame-pointer -mpoke-function-name
 LDFLAGS	= -nostdlib -T src/boot/memmap -L$(CS107E)/lib
-LDLIBS 	= -lpi -lgcc
+LDLIBS 	= -lpi -lgcc -lpiextra
 
 # Rules and recipes for all build steps
 
@@ -100,4 +100,3 @@ endef
 ifndef CS107E
 $(error $(CS107E_ERROR_MESSAGE))
 endif
-

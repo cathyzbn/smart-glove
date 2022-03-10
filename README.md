@@ -2,9 +2,9 @@
 # ZhiyinL-cathy-zhoubn-project
 =======
 ## Project title
-
+Smart Glove for Sign Langauge Recognition
 ## Team members
-
+Beining Zhou, Zhiyin Lin
 ## Project description
 
 ## Member contribution
@@ -26,3 +26,16 @@ the process you followed? what you learned along the way? Tell us about it!
 You are encouraged to submit photos/videos of your project in action. 
 Add the files and commit to your project repository to include along with your submission.
 >>>>>>> 9caaa12217440953a99ec80c87c1cb7773e19cc1
+
+
+
+
+
+## For workflow purposes:
+Flex sensor: https://www.sparkfun.com/products/10264
+    datasheet: https://cdn.sparkfun.com/assets/9/5/b/f/7/FLEX_SENSOR_-_SPECIAL_EDITION_DATA_SHEET_v2019__Rev_A_.pdf
+
+    range: 808 (straight) - 250 (bent), bent towards the other direction of the printed strips
+
+Accelerometer: https://www.pololu.com/product/2736 
+
