@@ -38,4 +38,8 @@ Flex sensor: https://www.sparkfun.com/products/10264
     range: 808 (straight) - 250 (bent), bent towards the other direction of the printed strips
 
 Accelerometer: https://www.pololu.com/product/2736 
+    Vdd - red
+    Gnd - black
+    Sda = blue GPIO_PIN2        
+    Slc - green GPIO_PIN3
 
