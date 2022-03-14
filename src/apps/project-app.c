@@ -64,36 +64,40 @@ void main(void)
     // TODO: init flex, accelerometer
     mcp3008_init();
 
-    printf("Begin reading");
+    printf("Begin initialization. \n");
+    
+
+    printf("End initialization. \n");
     char prevChar = '0'; // a placeholder \neq ' '
     struct Cursor cursor;
-    cursor.x = 0;
+    // cursor.x = 0;
     int time = 0;
 
     while (true){
-        timer_delay(5);
+        timer_delay(2);
 
-        printf("Time %d", time);
+        printf("Time %d\n", time);
         time ++;
 
         char c = glove_read_char(); // TODO: check name
+        printf("%c\n", c); // TODO: could uart output faster, but need initialization if so
         // glove_reset(); // TODO: check name
-        if (c == '\b'){
-            if (cursor.x >= 1){
-                printf("%c", '\b');
-                printf("%c", ' ');
-                printf("%c", '\b');
-                cursor.x --;
-            }
-        }
-        else if (c == ' '){
-            if (prevChar != ' '){
-                printf("%c", ' '); // TODO: could uart output faster, but need initialization if so
-            }
-        }
-        else {
-            printf("%c", c); // TODO: could uart output faster, but need initialization if so
-        }
+        // if (c == '\b'){
+        //     if (cursor.x >= 1){
+        //         printf("%c", '\b');
+        //         printf("%c", ' ');
+        //         printf("%c", '\b');
+        //         cursor.x --;
+        //     }
+        // }
+        // else if (c == ' '){
+        //     if (prevChar != ' '){
+        //         printf("%c", ' '); // TODO: could uart output faster, but need initialization if so
+        //     }
+        // }
+        // else {
+        //     printf("%c", c); // TODO: could uart output faster, but need initialization if so
+        // }
     }
 
     uart_putchar(EOT);
