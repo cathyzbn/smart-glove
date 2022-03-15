@@ -43,3 +43,25 @@ Accelerometer: https://www.pololu.com/product/2736
     Sda = blue GPIO_PIN2        
     Slc - green GPIO_PIN3
 
+
+A: 拇指直直直
+D: c 食指直
+e：全大flex
+f：ok
+g h: 拇指slightly bent
+k:三直
+l:两直
+
+m:小指使劲弯
+n:45大弯23弯1微弯
+o：c拇指直
+
+pq:45bent
+r:45微弯
+t:拇指食指微弯
+U: 
+
+
+
+
+

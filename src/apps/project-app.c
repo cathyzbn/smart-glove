@@ -52,6 +52,7 @@ struct Cursor{
 };
 
 void test_glove(void){
+    mcp3008_init();
     printf("Begin initialization. \n");
     struct Glove glove;
     glove_init_min(&glove);
@@ -98,12 +99,9 @@ void main(void)
     printf("Hello, world!\n");
     
     // test_flex(0);
-    test_accelero();
+    // test_accelero();
 
-    // TODO: init flex, accelerometer
-    // mcp3008_init();
-
-    // test_glove();
+    test_glove();
 
     uart_putchar(EOT);
 }
