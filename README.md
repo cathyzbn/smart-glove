@@ -43,7 +43,7 @@ Accelerometer: https://www.pololu.com/product/2736
     Sda = blue GPIO_PIN2        
     Slc - green GPIO_PIN3
 
-
+FOR ZBN DEMO
 A: 拇指直直直
 D: c 食指直
 e：全大flex
