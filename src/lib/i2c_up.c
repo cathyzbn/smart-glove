@@ -1,4 +1,4 @@
-/* 
+/*
  * File: i2c.c
  * -----------
  *
@@ -10,7 +10,6 @@
 #include "gpio.h"
 #include "i2c.h"
 #include "timer.h"
-#include "printf.h"
 
 
 struct I2C { // I2C registers
@@ -24,30 +23,30 @@ struct I2C { // I2C registers
     int clock_stretch_timeout;
 };
 
-#define	CONTROL_READ				0x0001
-#define CONTROL_CLEAR_FIFO	0x0010
-#define CONTROL_START				0x0080
-#define CONTROL_ENABLE			0x8000
+#define    CONTROL_READ                0x0001
+#define CONTROL_CLEAR_FIFO    0x0010
+#define CONTROL_START                0x0080
+#define CONTROL_ENABLE            0x8000
 
-#define STATUS_TRANSFER_ACTIVE	0x001
-#define STATUS_TRANSFER_DONE		0x002
-#define STATUS_FIFO_NEED_WRITE	0x004
-#define STATUS_FIFO_NEED_READ		0x008
-#define STATUS_FIFO_CAN_WRITE		0x010
-#define STATUS_FIFO_CAN_READ		0x020
-#define STATUS_FIFO_EMPTY				0x040
-#define STATUS_FIFO_FULL				0x080
-#define STATUS_ERROR_PERIPHERAL_ACK	0x100
-#define STATUS_TIMEOUT					0x200
+#define STATUS_TRANSFER_ACTIVE    0x001
+#define STATUS_TRANSFER_DONE        0x002
+#define STATUS_FIFO_NEED_WRITE    0x004
+#define STATUS_FIFO_NEED_READ        0x008
+#define STATUS_FIFO_CAN_WRITE        0x010
+#define STATUS_FIFO_CAN_READ        0x020
+#define STATUS_FIFO_EMPTY                0x040
+#define STATUS_FIFO_FULL                0x080
+#define STATUS_ERROR_PERIPHERAL_ACK    0x100
+#define STATUS_TIMEOUT                    0x200
 
 #define FIFO_MAX_SIZE 16
 
 /*
  * There are three I2C controllers on the Raspberry Pi, with the following
  * bus addresses:
- * 	• BSC0: 0x7E20_5000
- * 	• BSC1: 0x7E80_4000
- * 	• BSC2: 0x7E80_5000
+ *     • BSC0: 0x7E20_5000
+ *     • BSC1: 0x7E80_4000
+ *     • BSC2: 0x7E80_5000
  * We are using BSC1. The other two do not have available GPIO pins
  * for use on the A+ model.
 */
@@ -140,10 +139,7 @@ void i2c_write(unsigned peripheral_address, char *data, int data_length) {
     }
 
     // wait until the FIFO's contents are emptied by the peripheral
-    // TODO
-    while (!(i2c->status & STATUS_FIFO_EMPTY)){
-        printf("status: %d, empty: %d\n", i2c->status,STATUS_FIFO_EMPTY);
-    }
+    while (!(i2c->status & STATUS_FIFO_EMPTY))
         ;
 #if 0
     // inform end user of potential responses

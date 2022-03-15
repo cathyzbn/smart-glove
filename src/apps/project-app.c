@@ -27,6 +27,8 @@ void test_accelero(void){
     while(1) { 
         short x, y, z;
         lsm6ds33_read_accelerometer(&x, &y, &z);
+        printf("current position, x:%d, y:%d, z:%d\n", x, y, z);
+        
         // 16384 is 1g (1g == 1000mg)
         timer_delay_ms(200);
 	}
@@ -96,12 +98,12 @@ void main(void)
     printf("Hello, world!\n");
     
     // test_flex(0);
-    // test_accelero();
+    test_accelero();
 
     // TODO: init flex, accelerometer
-    mcp3008_init();
+    // mcp3008_init();
 
-    test_glove();
+    // test_glove();
 
     uart_putchar(EOT);
 }

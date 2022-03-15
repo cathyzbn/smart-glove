@@ -3,7 +3,7 @@
 
 /*
      LSM6DS33-AN4682.pdf
-		p8
+        p8
  */
 
 // register addresses
@@ -84,7 +84,7 @@ void lsm6ds33_init();
 void lsm6ds33_write_reg(unsigned char reg, unsigned char v);
 unsigned lsm6ds33_read_reg(unsigned char reg);
 
-unsigned lsm6ds33_get_whoami(); 
+unsigned lsm6ds33_get_whoami();
 
 void lsm6ds33_enable_gyroscope();
 void lsm6ds33_read_gyroscope(short *x, short *y, short *z);
