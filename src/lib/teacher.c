@@ -31,7 +31,7 @@ void teacher(void){
 
     console_printf("End init. \n");
 
-    char tests[] = {'a', 'o', 'f', 'p', 'q', 'z', 'd', 'm', 'j', 'g', 'u', 'b', 'i', 'k', 's', 'v', 'n', 'y', 't', 'l', 'r', 'e', 'h', 'w', 'x', 'c'};
+    char tests[] = {'A', 'L', 'X', 'N', 'T', 'P', 'W', 'C', 'M', 'I', 'Y', 'S', 'B', 'O', 'Q', 'Z', 'D', 'G', 'U', 'H', 'J', 'F', 'K', 'E', 'V', 'R'};
     int i=0;
     while(1){
         console_printf("Gesture the ASL for the character %c\n", tests[i]);
