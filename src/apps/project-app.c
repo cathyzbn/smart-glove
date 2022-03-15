@@ -49,23 +49,11 @@ struct Cursor{
     int x;
 };
 
-void main(void)
-{
-    timer_init();
-    uart_init();
-    printf("Hello, world!\n");
-    
-    // test_flex(0);
-    // test_accelero();
-
-    // TODO: init flex, accelerometer
-    mcp3008_init();
-
+void test_glove(void){
     printf("Begin initialization. \n");
     struct Glove glove;
     glove_init_min(&glove);
     glove_init_max(&glove);
-
 
     printf("End initialization. \n");
     char prevChar = '0'; // a placeholder \neq ' '
@@ -99,6 +87,21 @@ void main(void)
         //     printf("%c", c); // TODO: could uart output faster, but need initialization if so
         // }
     }
+}
+
+void main(void)
+{
+    timer_init();
+    uart_init();
+    printf("Hello, world!\n");
+    
+    // test_flex(0);
+    // test_accelero();
+
+    // TODO: init flex, accelerometer
+    mcp3008_init();
+
+    test_glove();
 
     uart_putchar(EOT);
 }
