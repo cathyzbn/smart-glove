@@ -8,8 +8,6 @@
 #include "LSM6DS33.h"
 
 #include "glove.h"
-// #include "printf.h"
-// #include "timer.h"
 
 // TODO: i2c_up.c error: bitwise comparison always evaluates to false
 //    77 |         while((*i2c.status & I2C_TXD)==1) {
@@ -47,7 +45,6 @@ void test_gyro(void){
 }
 
 //TODO: delete print in LSM, i2c.c
-
 struct Cursor{ 
     int x;
 };
@@ -58,14 +55,17 @@ void main(void)
     uart_init();
     printf("Hello, world!\n");
     
-    // test_flex(4);
+    // test_flex(0);
     // test_accelero();
 
     // TODO: init flex, accelerometer
     mcp3008_init();
 
     printf("Begin initialization. \n");
-    
+    struct Glove glove;
+    glove_init_min(&glove);
+    glove_init_max(&glove);
+
 
     printf("End initialization. \n");
     char prevChar = '0'; // a placeholder \neq ' '
@@ -79,7 +79,7 @@ void main(void)
         printf("Time %d\n", time);
         time ++;
 
-        char c = glove_read_char(); // TODO: check name
+        char c = glove_read_char(&glove); // TODO: check name
         printf("%c\n", c); // TODO: could uart output faster, but need initialization if so
         // glove_reset(); // TODO: check name
         // if (c == '\b'){

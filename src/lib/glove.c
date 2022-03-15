@@ -1,23 +1,9 @@
 #include "mcp3008.h"
 #include "printf.h"
 #include "flex.h"
+#include "timer.h"
+#include "glove.h"
 
-// struct Glove {
-//     //fields used for input
-//     int flex0_min;
-//     int flex0_max;
-//     int flex1_min;
-//     int flex1_max;
-//     int flex2_min;
-//     int flex2_max;
-//     int flex3_min;
-//     int flex3_max;
-//     int flex4_min;
-//     int flex4_max;
-
-    
-
-// }Glove;
 int constrain(int num, int min, int max){
     if (num > max){
         return max;
@@ -38,7 +24,31 @@ float map(int x, int in_min, int in_max, int out_min, int out_max){
     return ((float)(x - in_min)) * (out_max - out_min) / (in_max - in_min) + out_min;
 }
 
-char glove_read_char(){
+void glove_init_min(struct Glove* glove){
+    printf("Begin calibrating min. Curl your fingers. You have five seconds.");
+    timer_delay(5);
+    glove->sensorMin1 = read_flex(0);
+    glove->sensorMin2 = read_flex(1);
+    glove->sensorMin3 = read_flex(2);
+    glove->sensorMin4 = read_flex(3);
+    glove->sensorMin5 = read_flex(4);
+    printf("Finish calibrating min.");
+    printf("Mins: %d %d %d %d %d \n", glove->sensorMin1, glove->sensorMin2, glove->sensorMin3, glove->sensorMin4, glove->sensorMin5);
+}
+
+void glove_init_max(struct Glove* glove){
+    printf("Begin calibrating max. Put your fingers straight. You have five seconds.");
+    timer_delay(5);
+    glove->sensorMax1 = read_flex(0);
+    glove->sensorMax2 = read_flex(1);
+    glove->sensorMax3 = read_flex(2);
+    glove->sensorMax4 = read_flex(3);
+    glove->sensorMax5 = read_flex(4);
+    printf("Finish calibrating max.");
+    printf("Maxs: %d %d %d %d %d \n", glove->sensorMax1, glove->sensorMax2, glove->sensorMax3, glove->sensorMax4, glove->sensorMax5);
+}
+
+char glove_read_char(struct Glove* glove){
     char c = '0';
 
     //variable initializtion
@@ -53,29 +63,29 @@ char glove_read_char(){
     // int ymin = 1023;
 
     int FLEX_PIN1 = 0; // channel 0
-    int flexADC1 = 0; 
-    int sensorMin1 = 400; 
-    int sensorMax1 = 800;
+    // int flexADC1 = 0; 
+    // int sensorMin1 = 400; 
+    // int sensorMax1 = 800;
 
     int FLEX_PIN2 = 1; // channel 1
-    int flexADC2 = 0; 
-    int sensorMin2 = 400; 
-    int sensorMax2 = 800;
+    // int flexADC2 = 0; 
+    // int sensorMin2 = 400; 
+    // int sensorMax2 = 800;
 
     int FLEX_PIN3 = 2; 
-    int flexADC3 = 0; 
-    int sensorMin3 = 400; 
-    int sensorMax3 = 800;
+    // int flexADC3 = 0; 
+    // int sensorMin3 = 400; 
+    // int sensorMax3 = 800;
 
     int FLEX_PIN4 = 3; 
-    int flexADC4 = 0; 
-    int sensorMin4 = 400; 
-    int sensorMax4 = 800;
+    // int flexADC4 = 0; 
+    // int sensorMin4 = 400; 
+    // int sensorMax4 = 800;
 
     int FLEX_PIN5 = 4; 
-    int flexADC5 = 0; 
-    int sensorMin5 = 400; 
-    int sensorMax5 = 800;
+    // int flexADC5 = 0; 
+    // int sensorMin5 = 400; 
+    // int sensorMax5 = 800;
 
 // CALIBRATION: NOT NEEDED, recalculate range 0-1023 to reasonable range, might need rework 
     // int flexADC1 = read_flex(0);
@@ -84,71 +94,70 @@ char glove_read_char(){
     // int flexADC4 = read_flex(3);
     // int flexADC5 = read_flex(4);
 
-
-    // if(flexADC1<sensorMin1)
-    // {
-    //     sensorMin1=flexADC1;
-    // }
-    // if(flexADC1>sensorMax1)
-    // {
-    //     sensorMax1=flexADC1;
-    // }
-
-    // if(flexADC2<sensorMin2)
-    // {
-    //     sensorMin2=flexADC2;
-    // }
-    // if(flexADC2>sensorMax2)
-    // {
-    //     sensorMax2=flexADC2;
-    // }
-
-    // if(flexADC3<sensorMin3)
-    // {
-    //     sensorMin3=flexADC3;
-    // }
-    // if(flexADC3>sensorMax3)
-    // {
-    //     sensorMax4=flexADC4;
-    // }
-
-    // if(flexADC5<sensorMin5)
-    // {
-    //     sensorMin5=flexADC5;
-    // }
-    // if(flexADC5>sensorMax5)
-    // {
-    //     sensorMax5=flexADC5;
-    // }
-
-    // if(flexADC4<sensorMin4)
-    // {
-    //     sensorMin4=flexADC4;
-    // }
-    // if(flexADC4>sensorMax4)
-    // {
-    //     sensorMax4=flexADC4;
-    // }
-
-    flexADC1 = read_flex(FLEX_PIN1);
-    flexADC2 = read_flex(FLEX_PIN2);
-    flexADC3 = read_flex(FLEX_PIN3);
-    flexADC4 = read_flex(FLEX_PIN4);
-    flexADC5 = read_flex(FLEX_PIN5);
+    int flexADC1 = read_flex(FLEX_PIN1);
+    int flexADC2 = read_flex(FLEX_PIN2);
+    int flexADC3 = read_flex(FLEX_PIN3);
+    int flexADC4 = read_flex(FLEX_PIN4);
+    int flexADC5 = read_flex(FLEX_PIN5);
     printf("Flex Raw: %d %d %d %d %d\n", (int) flexADC1, (int) flexADC2, (int) flexADC3, (int) flexADC4, (int) flexADC5);
 
-    flexADC1 = constrain(flexADC1, sensorMin1, sensorMax1);
-    flexADC2 = constrain(flexADC2, sensorMin2, sensorMax2);
-    flexADC3 = constrain(flexADC3, sensorMin3, sensorMax3);
-    flexADC4 = constrain(flexADC4, sensorMin4, sensorMax4);
-    flexADC5 = constrain(flexADC5, sensorMin5, sensorMax5);
+    if(flexADC1<glove->sensorMin1)
+    {
+        glove->sensorMin1=flexADC1;
+    }
+    if(flexADC1>glove->sensorMax1)
+    {
+        glove->sensorMax1=flexADC1;
+    }
+
+    if(flexADC2<glove->sensorMin2)
+    {
+        glove->sensorMin2=flexADC2;
+    }
+    if(flexADC2>glove->sensorMax2)
+    {
+        glove->sensorMax2=flexADC2;
+    }
+
+    if(flexADC3<glove->sensorMin3)
+    {
+        glove->sensorMin3=flexADC3;
+    }
+    if(flexADC3>glove->sensorMax3)
+    {
+        glove->sensorMax4=flexADC4;
+    }
+
+    if(flexADC5<glove->sensorMin5)
+    {
+        glove->sensorMin5=flexADC5;
+    }
+    if(flexADC5>glove->sensorMax5)
+    {
+        glove->sensorMax5=flexADC5;
+    }
+
+    if(flexADC4<glove->sensorMin4)
+    {
+        glove->sensorMin4=flexADC4;
+    }
+    if(flexADC4>glove->sensorMax4)
+    {
+        glove->sensorMax4=flexADC4;
+    }
+
+    flexADC1 = constrain(flexADC1, glove->sensorMin1, glove->sensorMax1);
+    flexADC2 = constrain(flexADC2, glove->sensorMin2, glove->sensorMax2);
+    flexADC3 = constrain(flexADC3, glove->sensorMin3, glove->sensorMax3);
+    flexADC4 = constrain(flexADC4, glove->sensorMin4, glove->sensorMax4);
+    flexADC5 = constrain(flexADC5, glove->sensorMin5, glove->sensorMax5);
     printf("Flex Constrain: %d %d %d %d %d\n", (int) flexADC1, (int) flexADC2, (int) flexADC3, (int) flexADC4, (int) flexADC5);
 
-    float angle1= 90 - map(flexADC1, sensorMin1, sensorMax1, 0, 90);
-    float angle2= 90 - map(flexADC2, sensorMin2, sensorMax2, 0, 90);
-    float angle3= 90 - map(flexADC3, sensorMin3, sensorMax3, 0, 90);
-    float angle4= 90 - map(flexADC4, sensorMin4, sensorMax4, 0, 90);
-    float angle5= 90 - map(flexADC5, sensorMin5, sensorMax5, 0, 90); 
+    float angle1= 90 - map(flexADC1, glove->sensorMin1, glove->sensorMax1, 0, 90);
+    float angle2= 90 - map(flexADC2, glove->sensorMin2, glove->sensorMax2, 0, 90);
+    float angle3= 90 - map(flexADC3, glove->sensorMin3, glove->sensorMax3, 0, 90);
+    float angle4= 90 - map(flexADC4, glove->sensorMin4, glove->sensorMax4, 0, 90);
+    float angle5= 90 - map(flexADC5, glove->sensorMin5, glove->sensorMax5, 0, 90); 
 
     printf("Angles: %d %d %d %d %d\n", (int) angle1, (int) angle2, (int) angle3, (int) angle4, (int) angle5);
 
