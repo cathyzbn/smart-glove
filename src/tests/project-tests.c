@@ -1,3 +1,9 @@
+/* 
+File: project-tests
+----
+Tester for the project. Includes tests for flex sensor and accelerometer.
+ */
+
 #include "printf.h"
 #include "uart.h"
 #include "timer.h"
@@ -10,11 +16,12 @@
 #include "glove.h"
 #include "console_up.h"
 
-// TODO: i2c_up.c error: bitwise comparison always evaluates to false
-//    77 |         while((*i2c.status & I2C_TXD)==1) {
-static unsigned int nrows = 20;
-static unsigned int ncols = 50;
-
+/* 
+Function: test_flex
+--------
+Takes in an input, x, of the channel for the flex sensor. Continuously prints
+the number that the ADC detects.
+ */
 void test_flex(int x){
     mcp3008_init();
 
@@ -24,6 +31,11 @@ void test_flex(int x){
     }
 }
 
+/*
+Function: test_accelero
+-------
+Reads from the accelerometer and outputs continuously
+ */
 void test_accelero(void){
     i2c_init();
     lsm6ds33_init();
@@ -38,6 +50,11 @@ void test_accelero(void){
 	}
 }
 
+/* 
+Function: test_gyro
+-------
+Reads from the gyroscope and outputs continuously
+ */
 void test_gyro(void){
     i2c_init();
     lsm6ds33_init();
@@ -50,85 +67,14 @@ void test_gyro(void){
 	}
 }
 
-//TODO: delete print in LSM, i2c.c
-void test_glove(void){
-    i2c_init();
-    lsm6ds33_init();
-    mcp3008_init();
-    struct Glove glove;
-
-    printf("Begin initialization. \n");
-    glove_init_min(&glove);
-    glove_init_max(&glove);
-    printf("End initialization. \n");
-
-    char prevChar = '0'; // a placeholder \neq ' '
-    int count = 0;
-
-    console_init(nrows, ncols, GL_WHITE, GL_INDIGO);
-
-    while (true){
-        // printf("Count %d\n", count);
-        count ++;
-
-        char c = glove_read_char(&glove, 1); 
-        if (c == '*'){
-            continue;
-        }
-        if (c == '\b'){
-            // if (console.cursor.x < gl_get_char_width()){ // backspace across lines
-            //     if (console.cursor.y >= line_height){ 
-            //         // shift cursor
-            //         console.cursor.x = (console.ncols - 1) * gl_get_char_width();
-            //         console.cursor.y -= line_height;
-            //         // draw a whitespace (i.e. rectangular of background color)
-            //         gl_draw_rect(console.cursor.x, console.cursor.y, gl_get_char_width(), line_height, console.bcolor);
-            //         gl_swap_buffer();
-            //         gl_draw_rect(console.cursor.x, console.cursor.y, gl_get_char_width(), line_height, console.bcolor);
-            //     }
-            // }
-            // else{ // backspace in-line
-            //     // shift cursor
-            //     console.cursor.x -= gl_get_char_width();
-            //     // draw a whitespace (i.e. rectangular of background color)
-            //     gl_draw_rect(console.cursor.x, console.cursor.y, gl_get_char_width(), line_height, console.bcolor);
-            //     gl_swap_buffer();
-            //     gl_draw_rect(console.cursor.x, console.cursor.y, gl_get_char_width(), line_height, console.bcolor);
-            // }
-            console_printf("%c", '\b');
-            console_printf("%c", ' ');
-        }
-        console_printf("%c", c);
-
-        // if (c == '\b'){
-        //     if (cursor.x >= 1){
-        //         // printf("%c", '\b');
-        //         // printf("%c", ' ');
-        //         // printf("%c", '\b');
-        //         cursor.x --;
-        //     }
-        // }
-        // else if (c == ' '){
-        //     if (prevChar != ' '){
-        //         printf("%c", ' '); 
-        //     }
-        // }
-        // else {
-        //     printf("%c", c); 
-        // }
-    }
-}
-
 void main(void)
 {
     timer_init();
     uart_init();
     printf("Hello, world!1\n");
     
-    // test_flex(0);
-    // test_accelero();
-
-    test_glove();
+    test_flex(0);
+    test_accelero();
 
     uart_putchar(EOT);
 }

@@ -6,60 +6,35 @@ Smart Glove for Sign Langauge Recognition
 ## Team members
 Beining Zhou, Zhiyin Lin
 ## Project description
+We built a smart glove that detects the user’s hand gestures. As the client uses American Sign Language, our glove recognizes the 26 letters they gesture along with 2 "self-invented" space and backspace gestures.
+
+The glove has five flex sensors on the five fingers to detect the extent of bending of the fingers. Each of the flex sensors is connected to an Analog-to-Digital Converter to read the resistance values. The glove also has an accelerometer that measures the rotation of the hand. These six degrees of freedom helps to distinguish the sign language gestures.
+
+We have two platforms to interact with the use: a teaching platform that gives feedback to the user's gestures, and a console that allows a user to "type" using ASL.
 
 ## Member contribution
-A short description of the work performed by each member of the team.
-
+Cathy was mainly in charge of the hardware, and Zhiyin was mainly in charge of the software. However, both member contributed to each part. 
 ## References
-Cite any references/resources that inspired/influenced your project. 
-If your submission incorporates external contributions such as adopting 
-someone else's code or circuit into your project, be sure to clearly 
-delineate what portion of the work was derivative and what portion is 
-your original work.
+The idea was developed by our own. However, afterwards, we found this source: https://create.arduino.cc/projecthub/173799/a-glove-that-translate-sign-language-into-text-and-speech-c91b13 that was similar to our idea.
+
+We referenced the hardware design. We coded from scratch.
 
 ## Self-evaluation
-How well was your team able to execute on the plan in your proposal?  
-Any trying or heroic moments you would like to share? Of what are you particularly proud: the effort you put into it? the end product? 
-the process you followed? what you learned along the way? Tell us about it!
+We executed our plan on the proposal very well; There were so many unexpected places that went wrong, but with the help of the staff and our tireless hours, we figured it out!
+
+The accelerometer was really hard to work with on our end. We had many issues with the location, the reading, the infinite loops, that we essentially read through the whole i2c driver and found out about the connection buts and a bug that we made by ourselves in i2c.
+
+We were super proud of the end product and to see it work! We learned so much about hardware, connecting software, and making a product that we always was interested in making.
+
+However, there were still so many parts that we want to add to our product. We would want to design our GUI to better accomodate user experiences, provide specific feedback on gestures, and add more sensor, such as a metal-to-metal reading that could detect whether two fingers touch eaches each other. However, we were really satisfied with our end product!
+
 
 ## Photos
-You are encouraged to submit photos/videos of your project in action. 
-Add the files and commit to your project repository to include along with your submission.
+Video submitted with code.
 >>>>>>> 9caaa12217440953a99ec80c87c1cb7773e19cc1
 
 
 
-
-
-## For workflow purposes:
-Flex sensor: https://www.sparkfun.com/products/10264
-    datasheet: https://cdn.sparkfun.com/assets/9/5/b/f/7/FLEX_SENSOR_-_SPECIAL_EDITION_DATA_SHEET_v2019__Rev_A_.pdf
-
-    range: 808 (straight) - 250 (bent), bent towards the other direction of the printed strips
-
-Accelerometer: https://www.pololu.com/product/2736 
-    Vdd - red
-    Gnd - black
-    Sda = blue GPIO_PIN2        
-    Slc - green GPIO_PIN3
-
-FOR ZBN DEMO
-A: 拇指直直直
-D: c 食指直
-e：全大flex
-f：ok
-g h: 拇指slightly bent
-k:三直
-l:两直
-
-m:小指使劲弯
-n:45大弯23弯1微弯
-o：c拇指直
-
-pq:45bent
-r:45微弯
-t:拇指食指微弯
-U: 
 
 
 

@@ -1,3 +1,17 @@
+ 
+/* 
+File: glove.c
+CS 107E Final Project
+Cathy Zhou, Zhiyin Lin
+----
+File to support the ASL Glove!
+
+The glove has 6 sensors: 5 flex sensors and 1 accelerometer / gyroscope
+This file mainly deals with initialization, sensor communication, calibration, and detection.
+ */
+
+
+// minimum and maximum of two numbers
  #define max(a,b) \
    ({ a > b ? a : b; })
  #define min(a,b) \
@@ -10,18 +24,12 @@
 #include "glove.h"
 #include "LSM6DS33.h"
 
-struct Alphabet{
-    int* a[5];
-    int* b[5];
-    int* c[5];
-    int* d[5];
-    int* e[5];
-    int* f[5];
-    int* g[5];
-    int* h[5];
-    int* i[5];
-};
-
+/* 
+Function: constrain
+------
+@params: num - number to contrain to the range of @param min and @param max
+@return: constrained number
+ */
 int constrain(int num, int min, int max){
     if (num > max){
         return max;
@@ -34,17 +42,39 @@ int constrain(int num, int min, int max){
     }
 }
 
+/* 
+Function: map
+------
+Fits the int @param x to the output range given the input range through a linear map
+input range: @param in_min to @param in_max
+output range: @param out_min to @param out_max
+
+@return -1 if minimum and maximum does not match or x is not within input range
+@return the value after linear mapping
+ */
 float map(int x, int in_min, int in_max, int out_min, int out_max){
-    if (in_max == in_min){
-        printf("in_max can not equal to in_min");
+    // if inputs invalid
+    if (in_max <= in_min || out_max <= out_min || x < in_min || x > in_max){
         return -1;
     }
+    // linear map
     return ((float)(x - in_min)) * (out_max - out_min) / (in_max - in_min) + out_min;
 }
 
+/* 
+Function: glove_init_min
+------
+Instructs users to calibrate minimum for the sensors (curl fingers).
+
+Reads from flex sensor and finds the minimum value read for each sensor.
+Stores the values read into the `glove` struct.
+prints the calibration and parameters
+ */
 void glove_init_min(struct Glove* glove){
     printf("Begin calibrating min. Curl your fingers. You have five seconds.");
+    // reads after 5 seconds
     timer_delay(5);
+    // reads values as mininmum
     glove->sensorMin1 = read_flex(0);
     glove->sensorMin2 = read_flex(1);
     glove->sensorMin3 = read_flex(2);
@@ -54,9 +84,20 @@ void glove_init_min(struct Glove* glove){
     printf("Mins: %d %d %d %d %d \n", glove->sensorMin1, glove->sensorMin2, glove->sensorMin3, glove->sensorMin4, glove->sensorMin5);
 }
 
+/* 
+Function: glove_init_max
+------
+Instructs users to calibrate maximum for the sensors (straight fingers).
+
+Reads from flex sensor and finds the maximum value read for each sensor.
+Stores the values read into the `glove` struct.
+prints the calibration and parameters
+ */
 void glove_init_max(struct Glove* glove){
     printf("Begin calibrating max. Put your fingers straight. You have five seconds.");
+    // reads after 5 seconds
     timer_delay(5);
+    // reads values as maximum
     glove->sensorMax1 = read_flex(0);
     glove->sensorMax2 = read_flex(1);
     glove->sensorMax3 = read_flex(2);
@@ -66,26 +107,16 @@ void glove_init_max(struct Glove* glove){
     printf("Maxs: %d %d %d %d %d \n", glove->sensorMax1, glove->sensorMax2, glove->sensorMax3, glove->sensorMax4, glove->sensorMax5);
 }
 
-int is_flexed(int angle){
-    return (angle >= 70) && (angle <= 90);
-}
-
-int is_straight(int angle){
-    return (angle >= 0) && (angle <= 20); 
-}
-
-int is_bent(int angle){
-    return (angle >= 30) && (angle <= 70);
-}
-
-int is_slight_bent(int angle){
-    return (angle>=15) && (angle <= 40);
-}
-
+/* 
+Function: glove_calculate
+------
+Checks if a finger is bent slightly by angle
+ */
 void glove_calculate(struct Glove* glove, int sec){
     short x, y, z;
     short max_x = 0, max_y = 0, max_z = 0, min_x = 0, min_y = 0, min_z = 0;
     for (int i = 0; i < 6; i++){
+        // reads from the accelerometer to get the range of motion
         lsm6ds33_read_accelerometer(&x, &y, &z);
         if (i == 0){
             max_x = x;
@@ -103,125 +134,47 @@ void glove_calculate(struct Glove* glove, int sec){
             min_y = min(min_y, y);
             min_z = min(min_z, z);
         }
+        // delay a certain time to perform the next calculation
         timer_delay_ms((int)((sec*1000)/6));
     }
+    // records the range in gap
     glove->gap = max(max(max_x - min_x, max_y - min_y), max_z - min_z);
-    
-    //variable initializtion
-    // int xpin = A5;
-    // int xadc = 0;
-    // int xmax = 0;
-    // int xmin = 1023;
 
-    // int ypin = A6;
-    // int yadc = 0;
-    // int ymax = 0;
-    // int ymin = 1023;
+    int FLEX_PIN1 = 0; // little finger
+    int FLEX_PIN2 = 1; // ring finger
+    int FLEX_PIN3 = 2; // middle finger
+    int FLEX_PIN4 = 3; // index finger
+    int FLEX_PIN5 = 4; // thumb
 
-    int FLEX_PIN1 = 0; // channel 0
-    // int flexADC1 = 0; 
-    // int sensorMin1 = 400; 
-    // int sensorMax1 = 800;
-
-    int FLEX_PIN2 = 1; // channel 1
-    // int flexADC2 = 0; 
-    // int sensorMin2 = 400; 
-    // int sensorMax2 = 800;
-
-    int FLEX_PIN3 = 2; 
-    // int flexADC3 = 0; 
-    // int sensorMin3 = 400; 
-    // int sensorMax3 = 800;
-
-    int FLEX_PIN4 = 3; 
-    // int flexADC4 = 0; 
-    // int sensorMin4 = 400; 
-    // int sensorMax4 = 800;
-
-    int FLEX_PIN5 = 4; 
-    // int flexADC5 = 0; 
-    // int sensorMin5 = 400; 
-    // int sensorMax5 = 800;
-
-// CALIBRATION: NOT NEEDED, recalculate range 0-1023 to reasonable range, might need rework 
-    // int flexADC1 = read_flex(0);
-    // int flexADC2 = read_flex(1);
-    // int flexADC3 = read_flex(2);
-    // int flexADC4 = read_flex(3);
-    // int flexADC5 = read_flex(4);
-
+    // reads from the flex sensor
     int flexADC1 = read_flex(FLEX_PIN1);
     int flexADC2 = read_flex(FLEX_PIN2);
     int flexADC3 = read_flex(FLEX_PIN3);
     int flexADC4 = read_flex(FLEX_PIN4);
     int flexADC5 = read_flex(FLEX_PIN5);
-    // printf("Flex Raw: %d %d %d %d %d\n", (int) flexADC1, (int) flexADC2, (int) flexADC3, (int) flexADC4, (int) flexADC5);
 
-    if(flexADC1<glove->sensorMin1)
-    {
-        glove->sensorMin1=flexADC1;
-    }
-    if(flexADC1>glove->sensorMax1)
-    {
-        glove->sensorMax1=flexADC1;
-    }
-
-    if(flexADC2<glove->sensorMin2)
-    {
-        glove->sensorMin2=flexADC2;
-    }
-    if(flexADC2>glove->sensorMax2)
-    {
-        glove->sensorMax2=flexADC2;
-    }
-
-    if(flexADC3<glove->sensorMin3)
-    {
-        glove->sensorMin3=flexADC3;
-    }
-    if(flexADC3>glove->sensorMax3)
-    {
-        glove->sensorMax3=flexADC3;
-    }
-
-    if(flexADC5<glove->sensorMin5)
-    {
-        glove->sensorMin5=flexADC5;
-    }
-    if(flexADC5>glove->sensorMax5)
-    {
-        glove->sensorMax5=flexADC5;
-    }
-
-    if(flexADC4<glove->sensorMin4)
-    {
-        glove->sensorMin4=flexADC4;
-    }
-    if(flexADC4>glove->sensorMax4)
-    {
-        glove->sensorMax4=flexADC4;
-    }
-
+    // constrains the flex sensor's readings to the minimum and maximum
     flexADC1 = constrain(flexADC1, glove->sensorMin1, glove->sensorMax1);
     flexADC2 = constrain(flexADC2, glove->sensorMin2, glove->sensorMax2);
     flexADC3 = constrain(flexADC3, glove->sensorMin3, glove->sensorMax3);
     flexADC4 = constrain(flexADC4, glove->sensorMin4, glove->sensorMax4);
     flexADC5 = constrain(flexADC5, glove->sensorMin5, glove->sensorMax5);
-    // printf("Flex Constrain: %d %d %d %d %d\n", (int) flexADC1, (int) flexADC2, (int) flexADC3, (int) flexADC4, (int) flexADC5);
 
+    // maps the readings to an angle between 0 and 90
     glove->angle1= 90 - map(flexADC1, glove->sensorMin1, glove->sensorMax1, 0, 90);
     glove->angle2= 90 - map(flexADC2, glove->sensorMin2, glove->sensorMax2, 0, 90);
     glove->angle3= 90 - map(flexADC3, glove->sensorMin3, glove->sensorMax3, 0, 90);
     glove->angle4= 90 - map(flexADC4, glove->sensorMin4, glove->sensorMax4, 0, 90);
     glove->angle5= 90 - map(flexADC5, glove->sensorMin5, glove->sensorMax5, 0, 90); 
-
-    // printf("Angles: %d %d %d %d %d\n", (int) angle1, (int) angle2, (int) angle3, (int) angle4, (int) angle5);
-
-    // xadc = analogRead(xpin);
-    // yadc = analogRead(ypin);
     
 }
 
+/* 
+Function: get_angle
+-----
+supports getting angle at the finger @param flex_channel in the number of seconds @param sec
+reads from the glove @param glove
+ */
 int get_angle(int flex_channel, struct Glove* glove, int sec){
     if (flex_channel < 0 || flex_channel > 4)
     glove_calculate(glove, sec);
@@ -232,6 +185,15 @@ int get_angle(int flex_channel, struct Glove* glove, int sec){
     else return glove->angle5;
 }
 
+
+/* 
+Function: glove_read_char
+------
+@param glove: the struct for the glove
+@param sec: number of seconds to read a character
+
+contains the decision process to decide on the character for ASL.
+ */
 char glove_read_char(struct Glove* glove, int sec){
     glove_calculate(glove, sec);
     char c = '*';
@@ -251,7 +213,6 @@ char glove_read_char(struct Glove* glove, int sec){
         c = 'B';
     }
 
-    // if(is_bent(angle1)&&
     if((glove->angle1 >= 30) && (glove->angle1 <= 60)&&
        is_bent(glove->angle2)&&
        is_bent(glove->angle3)&&
@@ -411,7 +372,7 @@ char glove_read_char(struct Glove* glove, int sec){
        is_straight(glove->angle4)&&
        is_bent(glove->angle5)){
         c = 'V';
-    } // TODO: distinguish U, V
+    } 
 
     if(is_bent(glove->angle1)&&
        is_straight(glove->angle2)&&
